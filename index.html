@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IndoMap • Peta Gerai Indomaret Indonesia</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Leaflet -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    />
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-inner">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-blue"></span>
+            <span class="dot dot-yellow"></span>
+          </div>
+          <div class="brand-text">
+            <strong>IndoMap</strong>
+            <small>Peta Gerai Indomaret Indonesia</small>
+          </div>
+        </div>
+
+        <div class="nav-actions">
+          <span class="nav-badge">
+            <i class="ph-fill ph-database"></i> Data 2019
+          </span>
+          <a
+            class="nav-link"
+            href="https://github.com"
+            target="_blank"
+            rel="noopener"
+            aria-label="Source"
+          >
+            <i class="ph ph-info"></i>
+            <span>Tentang</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero / Stats Strip -->
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <p class="eyebrow">
+            <i class="ph-fill ph-map-pin-area"></i> Web GIS Indonesia
+          </p>
+          <h1>
+            Persebaran Gerai
+            <span class="accent-text">Indomaret</span>
+            di Seluruh Indonesia
+          </h1>
+          <p class="lead">
+            Eksplorasi interaktif lokasi ribuan gerai Indomaret berdasarkan
+            provinsi, kabupaten/kota, dan kata kunci pencarian.
+          </p>
+        </div>
+
+        <div class="kpi-strip" aria-label="Statistik ringkas">
+          <div class="kpi">
+            <div class="kpi-icon kpi-red">
+              <i class="ph-fill ph-storefront"></i>
+            </div>
+            <div>
+              <span class="kpi-label">Total Gerai</span>
+              <strong id="totalStores">0</strong>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-icon kpi-blue">
+              <i class="ph-fill ph-map-trifold"></i>
+            </div>
+            <div>
+              <span class="kpi-label">Provinsi</span>
+              <strong id="totalProvinces">0</strong>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-icon kpi-yellow">
+              <i class="ph-fill ph-buildings"></i>
+            </div>
+            <div>
+              <span class="kpi-label">Kab/Kota</span>
+              <strong id="totalCities">0</strong>
+            </div>
+          </div>
+          <div class="kpi kpi-highlight">
+            <div class="kpi-icon kpi-dark">
+              <i class="ph-fill ph-eye"></i>
+            </div>
+            <div>
+              <span class="kpi-label">Data Tampil</span>
+              <strong id="visibleStores">0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Workspace -->
+    <main class="workspace">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <!-- Filter Card -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-icon icon-red">
+                <i class="ph-fill ph-funnel"></i>
+              </span>
+              <div>
+                <h2>Filter Data</h2>
+                <p>Persempit pencarian wilayah</p>
+              </div>
+            </div>
+            <button id="resetBtn" class="btn-ghost" type="button">
+              <i class="ph ph-arrow-counter-clockwise"></i>
+              Reset
+            </button>
+          </div>
+
+          <div class="filter-stack">
+            <label class="field">
+              <span>Provinsi</span>
+              <div class="input-wrap">
+                <i class="ph ph-map-pin"></i>
+                <select id="provinceFilter">
+                  <option value="">Semua Provinsi</option>
+                </select>
+              </div>
+            </label>
+
+            <label class="field">
+              <span>Kabupaten / Kota</span>
+              <div class="input-wrap">
+                <i class="ph ph-city"></i>
+                <select id="cityFilter">
+                  <option value="">Semua Kabupaten/Kota</option>
+                </select>
+              </div>
+            </label>
+
+            <label class="field">
+              <span>Cari Gerai</span>
+              <div class="input-wrap">
+                <i class="ph ph-magnifying-glass"></i>
+                <input
+                  id="searchInput"
+                  type="search"
+                  placeholder="Nama, alamat, wilayah..."
+                  autocomplete="off"
+                />
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <!-- Top Cities Card -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-icon icon-yellow">
+                <i class="ph-fill ph-trophy"></i>
+              </span>
+              <div>
+                <h2>Top 10 Kab/Kota</h2>
+                <p>Gerai terbanyak pada filter aktif</p>
+              </div>
+            </div>
+          </div>
+
+          <ol id="topCities" class="ranking"></ol>
+        </section>
+      </aside>
+
+      <!-- Main: Map + Table -->
+      <section class="main-area">
+        <!-- Map Card -->
+        <section class="card map-card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-icon icon-blue">
+                <i class="ph-fill ph-globe-hemisphere-east"></i>
+              </span>
+              <div>
+                <h2>Peta Gerai</h2>
+                <p>Klik marker untuk detail lokasi</p>
+              </div>
+            </div>
+            <div class="legend">
+              <span class="legend-item">
+                <span class="legend-dot legend-dot-red"></span> Marker gerai
+              </span>
+              <span class="legend-item">
+                <span class="legend-dot legend-dot-cluster"></span> Klaster
+                wilayah
+              </span>
+            </div>
+          </div>
+
+          <div
+            id="map"
+            role="application"
+            aria-label="Peta lokasi Indomaret"
+          ></div>
+        </section>
+
+        <!-- Table Card -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-icon icon-dark">
+                <i class="ph-fill ph-table"></i>
+              </span>
+              <div>
+                <h2>Tabel Data Gerai</h2>
+                <p id="tableInfo">Memuat data...</p>
+              </div>
+            </div>
+            <label class="page-size-control">
+              <span>Per halaman</span>
+              <select id="pageSizeSelect">
+                <option value="10">10</option>
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th data-sort="nama_gerai">Nama Gerai</th>
+                  <th data-sort="alamat">Alamat</th>
+                  <th data-sort="kab_kota">Kabupaten/Kota</th>
+                  <th data-sort="provinsi">Provinsi</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="storeTableBody"></tbody>
+            </table>
+          </div>
+
+          <nav
+            id="pagination"
+            class="pagination"
+            aria-label="Navigasi halaman tabel"
+          ></nav>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p>
+          <strong>IndoMap</strong> · Dibuat dengan HTML, CSS, JavaScript &
+          Leaflet.js
+        </p>
+        <p class="muted">© 2024 — Team 9 · Web GIS Indonesia</p>
+      </div>
+    </footer>
+
+    <!-- Library JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
