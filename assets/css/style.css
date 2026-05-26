@@ -262,13 +262,6 @@ a { color: inherit; }
   box-shadow: var(--shadow-sm);
 }
 
-.kpi-highlight {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  border-color: #1e293b;
-}
-.kpi-highlight .kpi-label { color: rgba(255, 255, 255, 0.65); }
-.kpi-highlight strong { color: #fff; }
-
 .kpi-icon {
   width: 40px;
   height: 40px;
@@ -281,7 +274,7 @@ a { color: inherit; }
 .kpi-red { background: rgba(237, 28, 36, 0.1); color: var(--brand-red); }
 .kpi-blue { background: rgba(0, 56, 118, 0.1); color: var(--brand-blue); }
 .kpi-yellow { background: rgba(255, 210, 0, 0.18); color: #b58900; }
-.kpi-dark { background: rgba(255, 255, 255, 0.08); color: #fff; }
+.kpi-dark { background: rgba(15, 23, 42, 0.08); color: var(--text-1); }
 
 .kpi-label {
   display: block;
